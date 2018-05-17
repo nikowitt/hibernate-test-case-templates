@@ -11,6 +11,6 @@ public class TestCase extends AbstractTestCase {
 
 	@Test
 	public void hhh12421() {
-		System.out.println("Just compile with bytecode enhancement, it will crash.");
+		System.out.println("Just compile with bytecode enhancement, it will crash. Set models.specific.AbstractMail.to PUBLIC, then it will work.");
 	}
 }
