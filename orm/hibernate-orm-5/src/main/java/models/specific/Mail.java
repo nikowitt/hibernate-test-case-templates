@@ -1,5 +1,7 @@
 package models.specific;
 
-//@Entity uncomment this to crash bytecode enhancement: HHH-12421
+import javax.persistence.Entity;
+
+@Entity
 public class Mail extends AbstractMail {
 }

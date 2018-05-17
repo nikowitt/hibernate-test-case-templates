@@ -2,15 +2,15 @@ package org.hibernate.bugs;
 
 import org.junit.Test;
 
-import models.specific.Generic;
+import models.specific.Mail;
 
 public class TestCase extends AbstractTestCase {
 	public TestCase() {
-		super(Generic.class);
+		super(Mail.class);
 	}
 
 	@Test
-	public void hhh12579() {
-		System.out.println("Just execute, it will fail during bootstrapping");
+	public void hhh12421() {
+		System.out.println("Just compile with bytecode enhancement, it will crash.");
 	}
 }
