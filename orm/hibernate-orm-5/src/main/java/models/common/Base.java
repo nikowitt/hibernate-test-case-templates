@@ -18,15 +18,15 @@ import org.hibernate.annotations.PolymorphismType;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Base extends DatabaseEntity {
 
-	private Set<File> files;
+	private Set<Attachment> attachments;
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
 	@Fetch(FetchMode.SUBSELECT)
-	public Set<File> getFiles() {
-		return files;
+	public Set<Attachment> getAttachments() {
+		return attachments;
 	}
 
-	public void setFiles(Set<File> files) {
-		this.files = files;
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 }
