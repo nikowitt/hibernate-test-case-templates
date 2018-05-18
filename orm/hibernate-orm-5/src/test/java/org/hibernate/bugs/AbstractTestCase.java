@@ -1,6 +1,5 @@
 package org.hibernate.bugs;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.hibernate.Session;
@@ -44,7 +43,7 @@ public abstract class AbstractTestCase extends BaseCoreFunctionalTestCase {
 		return annotatedClasses;
 	}
 
-	protected void doInOpenTransaction(BiConsumer<Session, Transaction> code) {
+	protected void doInOpenTransaction(ThrowingBiConsumer<Session, Transaction> code) {
 
 		try (Session s = openSession()) {
 			Transaction tx = s.beginTransaction();
@@ -52,6 +51,18 @@ public abstract class AbstractTestCase extends BaseCoreFunctionalTestCase {
 			if (tx.getStatus().isOneOf(TransactionStatus.ACTIVE)) {
 				tx.commit();
 			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
+	}
+
+	@FunctionalInterface
+	public interface ThrowingBiConsumer<T, U> {
+		void accept(T var1, U var2) throws Exception;
+	}
+
+	protected <T> T save(Session s, T e) {
+		s.save(e);
+		return e;
 	}
 }
