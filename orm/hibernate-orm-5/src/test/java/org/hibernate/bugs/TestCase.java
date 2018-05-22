@@ -1,42 +1,42 @@
 package org.hibernate.bugs;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.hibernate.cfg.AvailableSettings;
-import org.junit.Assert;
 import org.junit.Test;
 
 import models.common.Attachment;
 import models.specific.Event;
-import models.specific.RequestWithEagerEvents;
-import models.specific.RequestWithLazyEvents;
+import models.specific.RequestWithEvents;
 
 public class TestCase extends AbstractTestCase {
 	public TestCase() {
-		super(RequestWithLazyEvents.class, RequestWithEagerEvents.class, Event.class, Attachment.class);
+		super(RequestWithEvents.class, Event.class, Attachment.class);
 		configure(c -> c.setProperty(AvailableSettings.USE_SECOND_LEVEL_CACHE, TRUE)
 				.setProperty(AvailableSettings.SHOW_SQL, FALSE));
 	}
 
 	@Test
-	public void hhh12601() {
+	public void hhhXXX() {
+		RequestWithEvents e2 = new RequestWithEvents();
 		doInOpenTransaction((s, tx) -> {
-			RequestWithLazyEvents e1 = new RequestWithLazyEvents();
-			e1.getEvents().add(save(s, new Event()));
-			s.save(e1);
 
-			RequestWithEagerEvents e2 = new RequestWithEagerEvents();
-			e2.getEvents().add(save(s, new Event()));
 			s.save(e2);
+			e2.getEvents().add(saveAndFlush(s, new Event().setParent(e2)));
 			s.flush();
 
 		});
-
 		doInOpenTransaction((s, tx) -> {
-			RequestWithEagerEvents eager = (RequestWithEagerEvents) s.createCriteria(RequestWithEagerEvents.class).uniqueResult();
-			Assert.assertTrue("Failed with eager collection!", eager.getEvents().size() == 1);
-			RequestWithLazyEvents lazy = (RequestWithLazyEvents) s.createCriteria(RequestWithLazyEvents.class).uniqueResult();
-			Assert.assertTrue("Failed with lazy collection!", lazy.getEvents().size() == 1);
-		});
+			RequestWithEvents ev = s.load(RequestWithEvents.class, e2.getId());
+			Set<Event> newC = new LinkedHashSet<>();
+			newC.add(saveAndFlush(s, new Event().setParent(ev)));
+			Set<Event> oldC = ev.getEvents();
+			oldC.clear();
+			oldC.addAll(newC);
+			s.flush();
 
+		});
 	}
 
 }

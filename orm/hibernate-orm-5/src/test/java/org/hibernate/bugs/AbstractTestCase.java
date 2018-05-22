@@ -65,4 +65,10 @@ public abstract class AbstractTestCase extends BaseCoreFunctionalTestCase {
 		s.save(e);
 		return e;
 	}
+
+	protected <T> T saveAndFlush(Session s, T e) {
+		save(s, e);
+		s.flush();
+		return e;
+	}
 }

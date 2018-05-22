@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import models.common.Base;
 
@@ -14,4 +15,8 @@ public abstract class RelatedToEvents extends Base {
 	public void setEvents(Set<Event> events) {
 		this.events = events;
 	}
+
+	@Transient
+	// do this to be able to modify the mapping table
+	public abstract Set<Event> getEvents();
 }
