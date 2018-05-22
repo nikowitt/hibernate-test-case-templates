@@ -14,6 +14,15 @@ public abstract class AbstractTestCase extends BaseCoreFunctionalTestCase {
 	public static final String FALSE = Boolean.FALSE.toString();
 	private Class[] annotatedClasses;
 	private Consumer<Configuration> config;
+	private static Session currentSession;
+
+	public static Session getCurrentSession() {
+		return currentSession;
+	}
+
+	public static void setCurrentSession(Session currentSession) {
+		AbstractTestCase.currentSession = currentSession;
+	}
 
 	@Override
 	protected void configure(Configuration configuration) {
@@ -46,6 +55,7 @@ public abstract class AbstractTestCase extends BaseCoreFunctionalTestCase {
 	protected void doInOpenTransaction(ThrowingBiConsumer<Session, Transaction> code) {
 
 		try (Session s = openSession()) {
+			setCurrentSession(s);
 			Transaction tx = s.beginTransaction();
 			code.accept(s, tx);
 			if (tx.getStatus().isOneOf(TransactionStatus.ACTIVE)) {
