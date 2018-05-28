@@ -8,7 +8,15 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.hibernate.testing.junit4.BaseCoreFunctionalTestCase;
 
+import models.common.Attachment;
+import models.common.security.Authority;
+import models.common.security.JafSid;
+import models.common.security.User;
+import models.common.security.UserGroup;
+
 public abstract class AbstractTestCase extends BaseCoreFunctionalTestCase {
+
+	protected static final Class[] SECURITY_ENTITIES = { User.class, UserGroup.class, Authority.class, JafSid.class, Attachment.class };
 
 	public static final String TRUE = Boolean.TRUE.toString();
 	public static final String FALSE = Boolean.FALSE.toString();

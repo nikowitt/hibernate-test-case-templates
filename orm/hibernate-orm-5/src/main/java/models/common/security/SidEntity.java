@@ -20,7 +20,8 @@ public class SidEntity extends Base {
 		return sid;
 	}
 
-	public void setSid(JafSid sid) {
+	public SidEntity setSid(JafSid sid) {
 		this.sid = sid;
+		return this;
 	}
 }

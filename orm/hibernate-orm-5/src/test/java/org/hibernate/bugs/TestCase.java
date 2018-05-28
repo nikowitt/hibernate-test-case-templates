@@ -1,31 +1,33 @@
 package org.hibernate.bugs;
 
-import javax.persistence.SharedCacheMode;
-
 import org.hibernate.cfg.AvailableSettings;
 import org.junit.Test;
 
-import models.common.Attachment;
 import models.common.CommonEntity;
+import models.common.security.JafSid;
+import models.common.security.User;
 
 public class TestCase extends AbstractTestCase {
+
 	public TestCase() {
-		super(CommonEntity.class, Attachment.class);
+		super(CommonEntity.class, SECURITY_ENTITIES);
 		configure(c -> c.setProperty(AvailableSettings.USE_SECOND_LEVEL_CACHE, TRUE)
-				.setProperty(AvailableSettings.JPA_SHARED_CACHE_MODE, String.valueOf(SharedCacheMode.ENABLE_SELECTIVE)));
+				.setProperty(AvailableSettings.SHOW_SQL, TRUE).setProperty(AvailableSettings.FORMAT_SQL, FALSE));
 	}
 
 	@Test
-	public void hhh12613() {
+	public void hhhXXX() {
 		doInOpenTransaction((s, tx) -> {
-			CommonEntity u = save(s, new CommonEntity());
-			Attachment m = save(s, new Attachment());
-			m.getData().setBlob(s.getLobHelper().createBlob("TEST".getBytes()));
-			u.getAttachments().add(m);
-			s.flush();
+			User u = new User();
+			s.save(u.setSid(save(s, new JafSid())));
+
+			CommonEntity c = save(s, new CommonEntity().setUser(u));
 
 		});
 
+		doInOpenTransaction((s, tx) -> {
+			s.createCriteria(CommonEntity.class).list();
+		});
 	}
 
 }
