@@ -16,7 +16,7 @@ public class TestCase extends AbstractTestCase {
 	}
 
 	@Test
-	public void hhhXXX() {
+	public void hhh12642() {
 		doInOpenTransaction((s, tx) -> {
 			User u = new User();
 			s.save(u.setSid(save(s, new JafSid())));
