@@ -16,11 +16,13 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Polymorphism;
 import org.hibernate.annotations.PolymorphismType;
 
+import business.common.BOBase;
+
 @Entity
 @Polymorphism(type = PolymorphismType.EXPLICIT)
 @Inheritance(strategy = InheritanceType.JOINED)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, include = "non-lazy")
-public abstract class Base extends DatabaseEntity {
+public abstract class Base<BO extends BOBase<?>> extends DatabaseEntity<BO> {
 
 	private Set<Attachment> attachments = new LinkedHashSet<>();
 

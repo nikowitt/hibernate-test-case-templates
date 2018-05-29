@@ -5,10 +5,11 @@ import static javax.persistence.FetchType.LAZY;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import business.common.BOCommonEntity;
 import models.common.security.User;
 
 @Entity
-public class CommonEntity extends Base {
+public class CommonEntity extends Base<BOCommonEntity> {
 
 	private String name;
 	private User user;
