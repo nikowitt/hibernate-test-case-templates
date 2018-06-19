@@ -33,16 +33,6 @@ public class TestCase extends AbstractTestCase {
 		}
 	}
 
-	private static class UserDTO {
-		private final int id;
-		private final String name;
-
-		private UserDTO(int id, String name) {
-			this.id = id;
-			this.name = name;
-		}
-	}
-
 	private static class IdResultTransformer implements ResultTransformer {
 
 		@Override
@@ -75,6 +65,7 @@ public class TestCase extends AbstractTestCase {
 			save(s, new User().setName("user").setSid(save(s, new JafSid().setSid("sid"))));
 		});
 
+		//works as expected
 		doInOpenTransaction((s, tx) -> {
 			CriteriaQuery<User> q = s.getCriteriaBuilder().createQuery(User.class);
 			Root<User> root = q.from(User.class);
@@ -84,6 +75,17 @@ public class TestCase extends AbstractTestCase {
 			assertThat(ids.get(0).id, is(2));
 		});
 
+		//works, but UserDTO must not be an inner class and needs to have appropriate constructor
+		doInOpenTransaction((s, tx) -> {
+			CriteriaQuery<UserDTO> q = s.getCriteriaBuilder().createQuery(UserDTO.class);
+			Root<User> root = q.from(User.class);
+			q.multiselect(root.get("id"), root.get("name"));
+			List<UserDTO> ids = s.createQuery(q).getResultList();
+			assertThat(ids.get(0).id, is(2));
+			assertThat(ids.get(0).name, is("user"));
+		});
+
+		//result transformer is ignored.
 		doInOpenTransaction((s, tx) -> {
 			CriteriaQuery<User> q = s.getCriteriaBuilder().createQuery(User.class);
 			Root<User> root = q.from(User.class);
