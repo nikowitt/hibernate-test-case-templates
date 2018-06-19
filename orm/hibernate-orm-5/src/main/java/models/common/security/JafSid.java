@@ -46,7 +46,8 @@ public class JafSid extends Base {
 		return sid;
 	}
 
-	public void setSid(String sid) {
+	public JafSid setSid(String sid) {
 		this.sid = sid;
+		return this;
 	}
 }
